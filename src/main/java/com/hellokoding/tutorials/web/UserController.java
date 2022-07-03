@@ -13,68 +13,68 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class UserController {
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
-    @Autowired
-    private SecurityService securityService;
+	@Autowired
+	private SecurityService securityService;
 
-    @Autowired
-    private UserValidator userValidator;
+	@Autowired
+	private UserValidator userValidator;
 
-    @GetMapping("/registration")
-    public String registration(Model model) {
-        if (securityService.isAuthenticated()) {
-            return "redirect:/";
-        }
+	@GetMapping("/registration")
+	public String registration(Model model) {
+		if (securityService.isAuthenticated()) {
+			return "redirect:/";
+		}
 
-        model.addAttribute("userForm", new User());
+		model.addAttribute("userForm", new User());
 
-        return "registration";
-    }
+		return "registration";
+	}
 
-    @PostMapping("/registration")
-    public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
-        userValidator.validate(userForm, bindingResult);
+	@PostMapping("/registration")
+	public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
+		userValidator.validate(userForm, bindingResult);
 
-        if (bindingResult.hasErrors()) {
-            return "registration";
-        }
+		if (bindingResult.hasErrors()) {
+			return "registration";
+		}
 
-        userService.save(userForm);
+		userService.save(userForm);
 
-        securityService.autoLogin(userForm.getUsername(), userForm.getPasswordConfirm());
+		securityService.autoLogin(userForm.getUsername(), userForm.getPasswordConfirm());
 
-        return "redirect:/welcome";
-    }
+		return "redirect:/welcome";
+	}
 
-    @GetMapping("/login")
-    public String login(Model model, String error, String logout) {
-        if (securityService.isAuthenticated()) {
-            return "redirect:/";
-        }
+	@GetMapping("/login")
+	public String login(Model model, String error, String logout) {
+		if (securityService.isAuthenticated()) {
+			return "redirect:/";
+		}
 
-        if (error != null)
-            model.addAttribute("error", "Your username and password is invalid.");
+		if (error != null)
+			model.addAttribute("error", "Your username and password is invalid.");
 
-        if (logout != null)
-            model.addAttribute("message", "You have been logged out successfully.");
+		if (logout != null)
+			model.addAttribute("message", "You have been logged out successfully.");
 
-        return "login";
-    }
+		return "login";
+	}
 
-    @GetMapping({"/welcome"})
-    public String welcome(Model model) {
-        return "welcome";
-    }
-    
-    @GetMapping("/")
-    public String index(Model model) {
-        return "index";
-    }
-    
-    @GetMapping("/home")
-    public String home(Model model) {
-        return "home";
-    }
+	@GetMapping({ "/", "/welcome" })
+	public String welcome(Model model) {
+		return "welcome";
+	}
+
+	@GetMapping("/home")
+	public String home(Model model) {
+		return "index";
+	}
+	
+	@GetMapping("/helloword")
+	public String helloword(Model model) {
+		return "index";
+	}
 }
